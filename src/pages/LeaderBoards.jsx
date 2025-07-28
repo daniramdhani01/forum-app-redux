@@ -1,4 +1,3 @@
-// import data from './leaderBoards-dummy.json'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { getLeaderboards } from '../redux/action'

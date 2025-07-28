@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 // import data from './detailThread-dummy.json'
 import { useDispatch, useSelector } from 'react-redux'
 import { getThreads } from '../../redux/action'
-import { Link, useParams } from 'react-router'
+import { Link, useParams } from 'react-router-dom'
 import { calculateDate } from '../../utils/date'
 
 function DetailThread() {
@@ -58,7 +58,7 @@ function DetailThread() {
               <span>{threadDetail.owner.name}</span>
           </div>
           
-          <p>{calculateDate(threadDetail.createdAt)} hari lalu</p>
+          <p>{calculateDate(threadDetail.createdAt)}</p>
       </footer>
 
       {/* Thread Comments Section */}
@@ -87,7 +87,7 @@ function DetailThread() {
                               />
                               <p>{comment.owner.name}</p>
                           </div>
-                          <p>{calculateDate(threadDetail.createdAt)} hari lalu</p>
+                          <p>{calculateDate(threadDetail.createdAt)}</p>
                       </header>
                       
                       <p dangerouslySetInnerHTML={{__html:comment.content}} />

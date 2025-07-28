@@ -229,6 +229,7 @@ main {
 }
 
 .new-thread-input .input-body {
+  resize: none;
   border: 1px solid #2d3e50;
   border: 1px solid var(--secondary);
   border-radius: 4px;

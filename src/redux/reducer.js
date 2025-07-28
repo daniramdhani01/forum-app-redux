@@ -1,15 +1,27 @@
-import { ALL_PROFILE, FETCH_ALL_USER, LEADERBOARDS, MY_PROFILE, THREAD_DETAIL, THREADS } from './types';
+import { ALL_PROFILE, FETCH_ALL_USER, GLOBAL_LOADING, LEADERBOARDS, LOGIN, MY_PROFILE, THREAD_DETAIL, THREADS } from './types';
 
 const initialState = {
   leaderboards: [],
   myProfile: {},
   allUser: [],
   threads: [],
-  threadDetail: {}
+  threadDetail: {},
+  isLogin: false,
+  globalLoading: false,
 };
 
 export function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case GLOBAL_LOADING:
+    return {
+      ...state,
+      globalLoading: action.payload
+    };
+  case LOGIN:
+    return {
+      ...state,
+      isLogin: action.payload
+    };
   case ALL_PROFILE:
     return {
       ...state,

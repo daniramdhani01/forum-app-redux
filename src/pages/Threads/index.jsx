@@ -1,13 +1,28 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 // import data from './threads-dummy.json'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router-dom'
 import { calculateDate } from '../../utils/date'
-import { getAllUser, getThreads } from '../../redux/action'
+import { getThreads } from '../../redux/action'
 import { useDispatch, useSelector } from 'react-redux'
+import { ReactComponent as Add } from '../../icons/add.svg'
 
 function Threads() {
   const dispatch = useDispatch()
-  const { threads, allUser } = useSelector(state => state.app)
+  const navigate = useNavigate()
+  const { threads: threadsList, allUser, isLogin } = useSelector(state => state.app)
+  const [selectedCategory, setSelectedCategory] = useState('')
+
+  const threads  = useMemo(()=>{
+    if (!selectedCategory) return threadsList;
+
+    const newThreads =  threadsList.filter(item => item.category === selectedCategory)
+    return newThreads;
+  },[selectedCategory, threadsList])
+
+  const categorys = useMemo(()=>{
+    const newCategory = new Map(threadsList.map(item => [item.category, item.category])).values()
+    return Array.from(newCategory)
+  },[threadsList])
 
   useEffect(()=>{
     dispatch(getThreads())
@@ -18,9 +33,13 @@ function Threads() {
     <header>
         <p>Kategori popular</p>
         <div className='categories-list'>
-            {threads.map(thread => (
-            <button type='button' className='category-item' key={thread.id+'categori'}>
-                <p>#{thread.category}</p>
+            {categorys.map(category => (
+            <button
+                key={category+'-categori'}
+                className={`category-item ${selectedCategory === category && 'selected'}`}
+                onClick={()=>setSelectedCategory((prev)=> prev === category ? '' : category)}
+                >
+                #{category}
             </button>
             ))}
         </div>
@@ -65,13 +84,14 @@ function Threads() {
                         </svg> {thread.totalComments}
                     </p>
                     
-                    <p>{calculateDate(thread.createdAt)} hari lalu</p>
+                    <p>{calculateDate(thread.createdAt)}</p>
                     <p className='thread-item__owner'>Dibuat oleh <strong>{allUser?.find(item => thread.ownerId === item.id)?.name}</strong></p>
                 </footer>
             </div>
             ))}
         </div>
     </div>
+    {isLogin && (<button className='new-thread-button' onClick={()=>navigate('/new')}><Add /></button>)}
     </section>
   )
 }

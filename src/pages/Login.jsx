@@ -1,14 +1,34 @@
-import React from 'react'
-import { Link } from 'react-router'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { loginUser } from '../redux/action'
 
 function Login() {
+  const { dispatch: loading } = useSelector(state => state)
+  const dispatch = useDispatch();
+  const [state, setState] = useState({
+    email: '',
+    password: ''
+  })
+
+  const handleChange = (e)=>{
+    const {value, name} = e.target
+    setState(prev => ({...prev, [name]: value}))
+  }
+
+  const handleOnSubmit = (e)=>{
+    e.preventDefault();
+    dispatch(loginUser(state))
+  }
+
   return (
     <section className='login-page'>
       <h2>Login</h2>
-      <form className='login-input'>
-          <input type='email' placeholder='Email'/>
-          <input type='password' placeholder='Password'/>
-          <button type='submit'>Login</button>
+      <form className='login-input' onSubmit={handleOnSubmit}>
+          <input type='email' name='email' placeholder='Email' required onChange={handleChange}/>
+          <input type='password' name='password' placeholder='Password' required  onChange={handleChange}/>
+          <button type='submit' disabled={loading?.default > 0}>Login</button>
       </form>
       <p className='register-info'>
           Belum punya akun? <Link to='/register'>Daftar di sini.</Link>
