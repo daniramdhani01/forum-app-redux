@@ -6,5 +6,4 @@ export const ALL_PROFILE = 'ALL_PROFILE';
 export const THREADS = 'THREADS';
 export const THREAD_DETAIL = 'THREAD_DETAIL';
 export const LOGIN = 'LOGIN';
-export const REGISTER = 'REGISTER';
 export const GLOBAL_LOADING = 'GLOBAL_LOADING';

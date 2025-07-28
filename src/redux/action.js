@@ -1,5 +1,5 @@
 import { instance } from '../api/axiosInstance';
-import { ALL_PROFILE, GLOBAL_LOADING, LEADERBOARDS, LOGIN, MY_PROFILE, REGISTER, THREAD_DETAIL, THREADS } from './types';
+import { ALL_PROFILE, GLOBAL_LOADING, LEADERBOARDS, LOGIN, MY_PROFILE, THREAD_DETAIL, THREADS } from './types';
 
 instance.interceptors.request.use(
   (config)=>{
@@ -57,7 +57,7 @@ export const registerUser = ({ name, email, password })=> async (dispatch) => {
 export const postThreads = (body)=> async (dispatch) =>{
   dispatch(setGlobalLoading(true));
   try {
-    const data = await instance.post('/threads', body);
+    await instance.post('/threads', body);
     return true;
   } catch (error) {
     alert(error.response.data.message);

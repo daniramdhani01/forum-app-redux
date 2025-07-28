@@ -1,9 +1,8 @@
-import { Suspense } from 'react'
-import NavigationButton from './NavigationButton'
-import PropTypes from 'prop-types'
-import NProgress from 'nprogress';
+import { Suspense } from 'react';
+import NavigationButton from './NavigationButton';
+import PropTypes from 'prop-types';
 
-function DefaultLayout({children}) {
+function DefaultLayout({ children }) {
   return (
     <div className='app'>
       <header>
@@ -16,18 +15,18 @@ function DefaultLayout({children}) {
       </header>
       <main>
         <Suspense fallback={<>loading...</>}>
-        {children}
+          {children}
         </Suspense>
       </main>
-    <footer>
-    <NavigationButton />
-    </footer>
-</div>
-  )
+      <footer>
+        <NavigationButton />
+      </footer>
+    </div>
+  );
 }
 
 DefaultLayout.propTypes = {
-    children: PropTypes.node.isRequired
-}
+  children: PropTypes.node.isRequired
+};
 
-export default DefaultLayout
+export default DefaultLayout;
