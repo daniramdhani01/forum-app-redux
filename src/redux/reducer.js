@@ -1,11 +1,25 @@
-import { ALL_PROFILE, FETCH_ALL_USER, GLOBAL_LOADING, LEADERBOARDS, LOGIN, MY_PROFILE, THREAD_DETAIL, THREADS } from './types';
+import { ALL_PROFILE, FETCH_ALL_USER, GLOBAL_LOADING, LEADERBOARDS, LOGIN, MY_PROFILE, THREAD_DETAIL, THREADS, SET_COMMENT } from './types';
 
 const initialState = {
   leaderboards: [],
   myProfile: {},
   allUser: [],
   threads: [],
-  threadDetail: {},
+  threadDetail: {
+    id: '',
+    title: '',
+    body: '',
+    createdAt: '',
+    owner: {
+      id: '',
+      name: '',
+      avatar: '',
+    },
+    category: '',
+    comments: [],
+    upVotesBy: [],
+    downVotesBy: [],
+  },
   isLogin: false,
   globalLoading: false,
 };
@@ -35,17 +49,25 @@ export function reducer(state = initialState, action = {}) {
   case THREADS:
     return {
       ...state,
-      threads: action.payload
+      threads: action.payload || initialState.threads
     };
   case THREAD_DETAIL:
     return {
       ...state,
-      threadDetail: action.payload
+      threadDetail: action.payload || initialState.threadDetail
     };
   case LEADERBOARDS:
     return {
       ...state,
-      leaderboards: action.payload
+      leaderboards: action.payload || initialState.leaderboards
+    };
+  case SET_COMMENT:
+    return {
+      ...state,
+      threadDetail: {
+        ...state.threadDetail,
+        comments: action.payload
+      }
     };
   case FETCH_ALL_USER:
     break;

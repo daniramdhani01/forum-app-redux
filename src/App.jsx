@@ -1,10 +1,11 @@
-import React, { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { lazy, useEffect } from 'react';
 import DetailThread from './pages/Threads/DetailThread';
 import DefaultLayout from './components/DefaultLayout';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import nProgress from 'nprogress';
 import New from './pages/New';
+import { userService } from './redux/action';
 
 const Threads = lazy(()=>import('./pages/Threads'));
 const LeaderBoards = lazy(()=>import('./pages/LeaderBoards'));
@@ -13,6 +14,7 @@ const Register = lazy(()=>import('./pages/Register'));
 
 function App() {
   const { isLogin, globalLoading } = useSelector((state) => state.app);
+  const dispatch = useDispatch();
 
   useEffect(()=>{
     if (globalLoading) {
@@ -21,6 +23,12 @@ function App() {
       nProgress.done();
     }
   }, [globalLoading]);
+
+  useEffect(()=>{
+    if (isLogin){
+      dispatch(userService.getMyProfile());
+    }
+  }, [isLogin]);
 
   return (
     <Routes>

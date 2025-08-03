@@ -291,16 +291,19 @@ main {
 }
 
 .comment-input__field {
+  resize: none;
   border: 1px solid #2d3e50;
   border: 1px solid var(--secondary);
   border-radius: 4px;
   margin: 10px 0;
   min-height: 100px;
-  padding: 8px
+  padding: 8px;
+  width: 100%;
 }
 
 .comment-input button {
   background-color: var(--secondary);
+  color: var(--primary);
   border: 0;
   border-radius: 4px;
   padding: 8px;

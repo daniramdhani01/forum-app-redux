@@ -1,14 +1,16 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { getLeaderboards } from '../redux/action';
+import { clearLeaderboard, leaderboardService } from '../redux/action';
 
 function LeaderBoards() {
   const dispatch = useDispatch();
   const { leaderboards } = useSelector((state) => state.app);
 
   useEffect(()=>{
-    dispatch(getLeaderboards());
-  }, []);
+    dispatch(leaderboardService.fetch());
+
+    return ()=> dispatch(clearLeaderboard());
+  }, [dispatch]);
 
   return (
     <div className='board-page'>

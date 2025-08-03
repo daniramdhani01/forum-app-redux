@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { loginUser } from '../redux/action';
+import { authService } from '../redux/action';
 
 function Login() {
   const { dispatch: loading } = useSelector((state) => state);
@@ -19,7 +19,7 @@ function Login() {
 
   const handleOnSubmit = (e)=>{
     e.preventDefault();
-    dispatch(loginUser(state));
+    dispatch(authService.login(state));
   };
 
   return (

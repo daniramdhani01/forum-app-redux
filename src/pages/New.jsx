@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { postThreads } from '../redux/action';
+import { threadsService } from '../redux/action';
 import { useNavigate } from 'react-router-dom';
 
 function NewThread() {
@@ -19,7 +19,7 @@ function NewThread() {
 
   const handleSubmit = async (e)=>{
     e.preventDefault();
-    const success =  await dispatch(postThreads(state));
+    const success =  await dispatch(threadsService.create(state));
     if (success) navigate('/');
   };
   return (

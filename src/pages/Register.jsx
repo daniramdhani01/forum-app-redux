@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../redux/action';
+import { authService } from '../redux/action';
 
 function Register() {
   const loading = useSelector((state) => state.loadingBar);
@@ -18,7 +18,7 @@ function Register() {
 
   const handleOnSubmit = (e)=>{
     e.preventDefault();
-    dispatch(registerUser(state));
+    dispatch(authService.register(state));
   };
   return (
     <section className='register-page'>

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { ReactComponent as Message } from '../icons/message.svg';
 import { ReactComponent as Chart } from '../icons/chart.svg';
 import { ReactComponent as Login } from '../icons/login.svg';
@@ -24,7 +24,7 @@ function NavigationButton() {
     } }];
 
     return [...basicList, { label: 'Login', icon: Login, onClick: ()=>navigate('/login') }];
-  }, [isLogin]);
+  }, [dispatch, navigate, isLogin]);
 
   return (
     <div className='navigation-bottom'>
