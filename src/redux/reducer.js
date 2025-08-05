@@ -2,7 +2,12 @@ import { ALL_PROFILE, FETCH_ALL_USER, GLOBAL_LOADING, LEADERBOARDS, LOGIN, MY_PR
 
 const initialState = {
   leaderboards: [],
-  myProfile: {},
+  myProfile: {
+    id: '',
+    name: '',
+    email: '',
+    avatar: ''
+  },
   allUser: [],
   threads: [],
   threadDetail: {

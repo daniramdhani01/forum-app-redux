@@ -6,7 +6,6 @@ import { calculateDate } from '../../utils/date';
 import ThreadComment from '../../components/ThreadComment';
 import { ReactComponent as Like } from '../../icons/like.svg';
 import { ReactComponent as DisLike } from '../../icons/disLike.svg';
-import { CREATE_COMMENT_OPTIMISTIC } from '../../redux/types';
 
 function DetailThread() {
   const dispatch = useDispatch();

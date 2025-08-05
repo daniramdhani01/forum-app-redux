@@ -1,6 +1,5 @@
 import { instance } from '../api/axiosInstance';
 import {
-  SET_COMMENT,
   ALL_PROFILE,
   CREATE_COMMENT_OPTIMISTIC,
   GLOBAL_LOADING,

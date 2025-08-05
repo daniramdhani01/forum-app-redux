@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { instance } from '../../api/axiosInstance';
-import { SET_COMMENT, CREATE_COMMENT_OPTIMISTIC } from '../types';
+import { SET_COMMENT, CREATE_COMMENT_OPTIMISTIC, VOTE_THREAD_OPTIMISTIC } from '../types';
 
 const optimistic = ({ getState, dispatch }) => (next) => async (action) => {
   const { type, payload } = action;
@@ -28,6 +28,12 @@ const optimistic = ({ getState, dispatch }) => (next) => async (action) => {
       const originalComments = [...getState().app.threadDetail.comments].slice(1);
       dispatch({ type: SET_COMMENT, payload: originalComments });
       alert(error?.response?.data?.message || error.message);
+      return false;
+    }
+  case VOTE_THREAD_OPTIMISTIC:
+    try {
+      return true;
+    } catch (error) {
       return false;
     }
 

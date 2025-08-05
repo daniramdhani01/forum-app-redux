@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { calculateDate } from '../../utils/date';
 import { clearThreads, threadsService } from '../../redux/action';
@@ -6,17 +6,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as Add } from '../../icons/add.svg';
 import { ReactComponent as Like } from '../../icons/like.svg';
 import { ReactComponent as DisLike } from '../../icons/disLike.svg';
+import { ReactComponent as LikeSolid } from '../../icons/likeSolid.svg';
+import { ReactComponent as DisLikeSolid } from '../../icons/disLikeSolid.svg';
 import { ReactComponent as ArrowLeft } from '../../icons/arrowLeft.svg';
 
 function Threads() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { threads: threadsList, allUser, isLogin } = useSelector((state) => state.app);
+  const { threads: threadsList, allUser, isLogin, myProfile } = useSelector((state) => state.app);
   const [selectedCategory, setSelectedCategory] = useState('');
 
   const threads  = useMemo(()=>{
     if (!selectedCategory) return threadsList;
-
     const newThreads =  threadsList.filter((item) => item.category === selectedCategory);
     return newThreads;
   }, [selectedCategory, threadsList]);
@@ -26,9 +27,18 @@ function Threads() {
     return Array.from(newCategory);
   }, [threadsList]);
 
+  const isMyVote = useCallback((arrayVote = [])=>{
+    if (!myProfile.id) return false;
+
+    return arrayVote.includes(myProfile.id);
+  }, [threads, myProfile]);
+
+  const handleVote = async (vote, threadId)=>{
+    console.log('daniw', vote, threadId);
+  };
+
   useEffect(()=>{
     dispatch(threadsService.fetch());
-
     return ()=> dispatch(clearThreads());
   }, [dispatch]);
 
@@ -66,13 +76,13 @@ function Threads() {
               <div className='thread-item__body' dangerouslySetInnerHTML={{ __html: thread.body }} />
 
               <footer className='thread-item__footer'>
-                <button type='button' className='thread-upvote__button'>
-                  <Like />
+                <button type='button' className='thread-upvote__button' onClick={()=>isMyVote(thread.upVotesBy) ? handleVote('up', thread.id) : handleVote('neutral', thread.id)}>
+                  {isMyVote(thread.upVotesBy) ? <LikeSolid /> : <Like />}
                   <span className='thread-upvote__label'>{thread.upVotesBy.length}</span>
                 </button>
 
-                <button type='button' className='thread-downvote__button'>
-                  <DisLike />
+                <button type='button' className='thread-downvote__button' onClick={()=>isMyVote(thread.upVotesBy) ? handleVote('down', thread.id) : handleVote('neutral', thread.id)}>
+                  {isMyVote(thread.downVotesBy) ? <DisLikeSolid /> : <DisLike />}
                   <span className='thread-downvote__label'>{thread.downVotesBy.length}</span>
                 </button>
 
