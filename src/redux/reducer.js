@@ -1,4 +1,4 @@
-import { ALL_PROFILE, FETCH_ALL_USER, GLOBAL_LOADING, LEADERBOARDS, LOGIN, MY_PROFILE, THREAD_DETAIL, THREADS, SET_COMMENT } from './types';
+import { ALL_PROFILE, FETCH_ALL_USER, GLOBAL_LOADING, LEADERBOARDS, LOGIN, MY_PROFILE, THREAD_DETAIL, THREADS, SET_COMMENT, SET_VOTE_THREAD } from './types';
 
 const initialState = {
   leaderboards: [],
@@ -73,6 +73,11 @@ export function reducer(state = initialState, action = {}) {
         ...state.threadDetail,
         comments: action.payload
       }
+    };
+  case SET_VOTE_THREAD:
+    return {
+      ...state,
+      threads: action.payload
     };
   case FETCH_ALL_USER:
     break;

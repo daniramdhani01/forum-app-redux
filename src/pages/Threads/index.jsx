@@ -9,6 +9,8 @@ import { ReactComponent as DisLike } from '../../icons/disLike.svg';
 import { ReactComponent as LikeSolid } from '../../icons/likeSolid.svg';
 import { ReactComponent as DisLikeSolid } from '../../icons/disLikeSolid.svg';
 import { ReactComponent as ArrowLeft } from '../../icons/arrowLeft.svg';
+import { VOTE_THREAD_OPTIMISTIC } from '../../redux/types';
+import { alertLoginForVote } from '../../utils/alert';
 
 function Threads() {
   const dispatch = useDispatch();
@@ -34,7 +36,8 @@ function Threads() {
   }, [threads, myProfile]);
 
   const handleVote = async (vote, threadId)=>{
-    console.log('daniw', vote, threadId);
+    const payload = { vote, threadId };
+    dispatch({ type: VOTE_THREAD_OPTIMISTIC,  payload });
   };
 
   useEffect(()=>{
@@ -76,12 +79,12 @@ function Threads() {
               <div className='thread-item__body' dangerouslySetInnerHTML={{ __html: thread.body }} />
 
               <footer className='thread-item__footer'>
-                <button type='button' className='thread-upvote__button' onClick={()=>isMyVote(thread.upVotesBy) ? handleVote('up', thread.id) : handleVote('neutral', thread.id)}>
+                <button type='button' className='thread-upvote__button' onClick={()=>isLogin ? handleVote('up', thread.id) : alertLoginForVote()}>
                   {isMyVote(thread.upVotesBy) ? <LikeSolid /> : <Like />}
                   <span className='thread-upvote__label'>{thread.upVotesBy.length}</span>
                 </button>
 
-                <button type='button' className='thread-downvote__button' onClick={()=>isMyVote(thread.upVotesBy) ? handleVote('down', thread.id) : handleVote('neutral', thread.id)}>
+                <button type='button' className='thread-downvote__button' onClick={()=>isLogin ? handleVote('down', thread.id) : alertLoginForVote()}>
                   {isMyVote(thread.downVotesBy) ? <DisLikeSolid /> : <DisLike />}
                   <span className='thread-downvote__label'>{thread.downVotesBy.length}</span>
                 </button>

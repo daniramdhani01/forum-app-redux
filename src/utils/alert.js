@@ -1,0 +1,1 @@
+export const alertLoginForVote = ()=> alert('Silakan Login Untuk Vote');

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearThreadDetail, threadsService } from '../../redux/action';
 import { useParams } from 'react-router-dom';
@@ -6,15 +6,26 @@ import { calculateDate } from '../../utils/date';
 import ThreadComment from '../../components/ThreadComment';
 import { ReactComponent as Like } from '../../icons/like.svg';
 import { ReactComponent as DisLike } from '../../icons/disLike.svg';
+import { ReactComponent as LikeSolid } from '../../icons/likeSolid.svg';
+import { ReactComponent as DisLikeSolid } from '../../icons/disLikeSolid.svg';
+import { alertLoginForVote } from '../../utils/alert';
+import { VOTE_THREAD_OPTIMISTIC } from '../../redux/types';
 
 function DetailThread() {
   const dispatch = useDispatch();
   const params = useParams();
   const { id } = params;
-  const { threadDetail } = useSelector((state) => state.app);
+  const { threadDetail, myProfile, isLogin } = useSelector((state) => state.app);
 
-  const handleVote = (vote, detail)=>{
-    console.log('daniw', vote, detail);
+  const isMyVote = useCallback((arrayVote = [])=>{
+    if (!myProfile.id) return false;
+    return arrayVote.includes(myProfile.id);
+  }, [myProfile]);
+
+  const handleVote = (vote)=>{
+    console.log('daniw masuk');
+    const payload = { vote, threadId: threadDetail.id };
+    dispatch({ type: VOTE_THREAD_OPTIMISTIC,  payload });
   };
 
   const handleComment = async (comment)=>{
@@ -44,13 +55,13 @@ function DetailThread() {
 
       {/* Thread Footer */}
       <footer className='thread-footer'>
-        <button type='button' className='thread-upvote__button' onClick={()=>handleVote('up', { threadId: threadDetail.id })}>
-          <Like />
+        <button type='button' className='thread-upvote__button' onClick={()=>isLogin ? handleVote('up') : alertLoginForVote()}>
+          {isMyVote(threadDetail.upVotesBy) ? <LikeSolid /> : <Like />}
           <span className='thread-upvote__label'>{threadDetail.upVotesBy.length}</span>
         </button>
 
-        <button type='button' className='thread-downvote__button' onClick={()=>handleVote('down', { threadId: threadDetail.id })}>
-          <DisLike />
+        <button type='button' className='thread-downvote__button' onClick={()=>isLogin ? handleVote('down') : alertLoginForVote()}>
+          {isMyVote(threadDetail.downVotesBy) ? <DisLikeSolid /> : <DisLike />}
           <span className='thread-downvote__label'>{threadDetail.downVotesBy.length}</span>
         </button>
 
