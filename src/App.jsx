@@ -28,7 +28,7 @@ function App() {
     if (isLogin){
       dispatch(userService.getMyProfile());
     }
-  }, [isLogin]);
+  }, [isLogin, dispatch]);
 
   return (
     <Routes>

@@ -33,7 +33,7 @@ function Threads() {
     if (!myProfile.id) return false;
 
     return arrayVote.includes(myProfile.id);
-  }, [threads, myProfile]);
+  }, [myProfile]);
 
   const handleVote = async (vote, threadId)=>{
     const payload = { vote, threadId };
@@ -41,8 +41,13 @@ function Threads() {
   };
 
   useEffect(()=>{
+    const controller = new AbortController();
+
     dispatch(threadsService.fetch());
-    return ()=> dispatch(clearThreads());
+    return ()=> {
+      dispatch(clearThreads());
+      controller.abort();
+    };
   }, [dispatch]);
 
   return (
