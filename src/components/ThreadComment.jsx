@@ -1,14 +1,23 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { calculateDate } from '../utils/date';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ReactComponent as Like } from '../icons/like.svg';
 import { ReactComponent as DisLike } from '../icons/disLike.svg';
+import { ReactComponent as LikeSolid } from '../icons/likeSolid.svg';
+import { ReactComponent as DisLikeSolid } from '../icons/disLikeSolid.svg';
+import { alertLoginForVote } from '../utils/alert';
 
 function ThreadComment({ onSubmitComment, vote }) {
-  const { threadDetail, isLogin } = useSelector((state) => state.app);
+  const { threadDetail, isLogin, myProfile } = useSelector((state) => state.app);
   const [comment, setComment] = useState('');
+
+  const isMyVote = useCallback((arrayVote = [])=>{
+    if (!myProfile.id) return false;
+    return arrayVote.includes(myProfile.id);
+  }, [myProfile]);
+
   return (
     <>
       {/* Thread Comments Section */}
@@ -54,13 +63,13 @@ function ThreadComment({ onSubmitComment, vote }) {
                 <p dangerouslySetInnerHTML={{ __html:comment.content }} />
 
                 <footer>
-                  <button type='button' className='comment-upvote__button' onClick={()=>vote('up', { threadId: threadDetail.id, commentId: comment.id })}>
-                    <Like />
+                  <button type='button' className='comment-upvote__button' onClick={()=>isLogin ? vote('up', comment.id) : alertLoginForVote()}>
+                    {isMyVote(comment.upVotesBy) ? <LikeSolid /> : <Like />}
                     <span className='comment-upvote__label'>{comment.upVotesBy.length}</span>
                   </button>
 
-                  <button type='button' className='comment-downvote__button' onClick={()=>vote('down', { threadId: threadDetail.id, commentId: comment.id })}>
-                    <DisLike />
+                  <button type='button' className='comment-downvote__button' onClick={()=>isLogin ? vote('down', comment.id) : alertLoginForVote()}>
+                    {isMyVote(comment.downVotesBy) ? <DisLikeSolid /> : <DisLike />}
                     <span className='comment-downvote__label'>{comment.downVotesBy.length}</span>
                   </button>
                 </footer>

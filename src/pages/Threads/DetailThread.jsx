@@ -9,7 +9,7 @@ import { ReactComponent as DisLike } from '../../icons/disLike.svg';
 import { ReactComponent as LikeSolid } from '../../icons/likeSolid.svg';
 import { ReactComponent as DisLikeSolid } from '../../icons/disLikeSolid.svg';
 import { alertLoginForVote } from '../../utils/alert';
-import { VOTE_THREAD_OPTIMISTIC } from '../../redux/types';
+import { VOTE_COMMENT_OPTIMISTIC, VOTE_THREAD_DETAIL_OPTIMISTIC } from '../../redux/types';
 
 function DetailThread() {
   const dispatch = useDispatch();
@@ -23,9 +23,13 @@ function DetailThread() {
   }, [myProfile]);
 
   const handleVote = (vote)=>{
-    console.log('daniw masuk');
     const payload = { vote, threadId: threadDetail.id };
-    dispatch({ type: VOTE_THREAD_OPTIMISTIC,  payload });
+    dispatch({ type: VOTE_THREAD_DETAIL_OPTIMISTIC,  payload });
+  };
+
+  const handleVoteComment = (vote, commentId)=>{
+    const payload = { vote, threadId: threadDetail.id, commentId };
+    dispatch({ type: VOTE_COMMENT_OPTIMISTIC,  payload });
   };
 
   const handleComment = async (comment)=>{
@@ -76,7 +80,7 @@ function DetailThread() {
 
         <p>{calculateDate(threadDetail.createdAt)}</p>
       </footer>
-      <ThreadComment onSubmitComment={handleComment} vote={handleVote}/>
+      <ThreadComment onSubmitComment={handleComment} vote={handleVoteComment}/>
     </section>
   );
 }
