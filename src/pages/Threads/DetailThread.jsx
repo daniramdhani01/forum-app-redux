@@ -9,7 +9,8 @@ import { ReactComponent as DisLike } from '../../icons/disLike.svg';
 import { ReactComponent as LikeSolid } from '../../icons/likeSolid.svg';
 import { ReactComponent as DisLikeSolid } from '../../icons/disLikeSolid.svg';
 import { alertLoginForVote } from '../../utils/alert';
-import { VOTE_COMMENT_OPTIMISTIC, VOTE_THREAD_DETAIL_OPTIMISTIC } from '../../redux/types';
+import { CREATE_COMMENT_OPTIMISTIC, VOTE_COMMENT_OPTIMISTIC, VOTE_THREAD_DETAIL_OPTIMISTIC } from '../../redux/types';
+import { abortManager } from '../../api/abortManager';
 
 function DetailThread() {
   const dispatch = useDispatch();
@@ -33,13 +34,16 @@ function DetailThread() {
   };
 
   const handleComment = async (comment)=>{
-    return await dispatch(threadsService.comments.create(threadDetail.id, comment));
+    return await dispatch({ type: CREATE_COMMENT_OPTIMISTIC, payload: { threadId: threadDetail.id, content: comment } });
   };
 
   useEffect(()=>{
     if (id) dispatch(threadsService.fetch(id));
 
-    return ()=> dispatch(clearThreadDetail());
+    return ()=>{
+      abortManager.abortAll();
+      dispatch(clearThreadDetail());
+    };
   }, [dispatch, id]);
 
   if (!threadDetail?.id) return <></>;

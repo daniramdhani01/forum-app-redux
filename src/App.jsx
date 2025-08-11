@@ -2,21 +2,19 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { lazy, useEffect } from 'react';
 import DetailThread from './pages/Threads/DetailThread';
 import DefaultLayout from './components/DefaultLayout';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import nProgress from 'nprogress';
 import New from './pages/New';
-import { userService } from './redux/action';
 
-const Threads = lazy(()=>import('./pages/Threads'));
-const LeaderBoards = lazy(()=>import('./pages/LeaderBoards'));
-const Login = lazy(()=>import('./pages/Login'));
-const Register = lazy(()=>import('./pages/Register'));
+const Threads = lazy(() => import('./pages/Threads'));
+const LeaderBoards = lazy(() => import('./pages/LeaderBoards'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
 
 function App() {
   const { isLogin, globalLoading } = useSelector((state) => state.app);
-  const dispatch = useDispatch();
 
-  useEffect(()=>{
+  useEffect(() => {
     if (globalLoading) {
       nProgress.start();
     } else {
@@ -24,23 +22,17 @@ function App() {
     }
   }, [globalLoading]);
 
-  useEffect(()=>{
-    if (isLogin){
-      dispatch(userService.getMyProfile());
-    }
-  }, [isLogin, dispatch]);
-
   return (
     <Routes>
-      <Route path='/' element={<DefaultLayout><Threads/></DefaultLayout>}/>
-      <Route path='threads/:id' element={<DefaultLayout><DetailThread/></DefaultLayout>}/>
-      <Route path='leaderboards' element={<DefaultLayout><LeaderBoards/></DefaultLayout>}/>
+      <Route path='/' element={<DefaultLayout><Threads /></DefaultLayout>} />
+      <Route path='threads/:id' element={<DefaultLayout><DetailThread /></DefaultLayout>} />
+      <Route path='leaderboards' element={<DefaultLayout><LeaderBoards /></DefaultLayout>} />
 
-      <Route path='new' element={isLogin ? <DefaultLayout><New/></DefaultLayout> : <Navigate to='/'/>}/>
+      <Route path='new' element={isLogin ? <DefaultLayout><New /></DefaultLayout> : <Navigate to='/' />} />
 
-      <Route path='login' element={!isLogin ? <DefaultLayout><Login/></DefaultLayout> : <Navigate to='/'/>}/>
-      <Route path='register' element={!isLogin ? <DefaultLayout><Register/></DefaultLayout> : <Navigate to='/'/>}/>
-      <Route path='*' element={<DefaultLayout><h1>404: Not Found</h1></DefaultLayout>}/>
+      <Route path='login' element={!isLogin ? <DefaultLayout><Login /></DefaultLayout> : <Navigate to='/' />} />
+      <Route path='register' element={!isLogin ? <DefaultLayout><Register /></DefaultLayout> : <Navigate to='/' />} />
+      <Route path='*' element={<DefaultLayout><h1>404: Not Found</h1></DefaultLayout>} />
     </Routes>
   );
 }

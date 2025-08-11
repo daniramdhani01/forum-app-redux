@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { clearLeaderboard, leaderboardService } from '../redux/action';
+import { abortManager } from '../api/abortManager';
 
 function LeaderBoards() {
   const dispatch = useDispatch();
@@ -9,7 +10,10 @@ function LeaderBoards() {
   useEffect(()=>{
     dispatch(leaderboardService.fetch());
 
-    return ()=> dispatch(clearLeaderboard());
+    return ()=>{
+      abortManager.abortAll();
+      dispatch(clearLeaderboard());
+    };
   }, [dispatch]);
 
   return (

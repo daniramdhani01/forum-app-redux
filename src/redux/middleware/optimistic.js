@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { instance } from '../../api/axiosInstance';
 import { SET_COMMENT, CREATE_COMMENT_OPTIMISTIC, VOTE_THREAD_OPTIMISTIC, SET_THREADS, VOTE_COMMENT_OPTIMISTIC, VOTE_THREAD_DETAIL_OPTIMISTIC, SET_THREAD_DETAIL } from '../types';
 import { updateVotes } from '../../utils/updateStateRedux';
+import { abortManager } from '../../api/abortManager';
 
 const optimistic = ({ getState, dispatch }) => (next) => async (action) => {
   const { type, payload } = action;
@@ -24,7 +25,8 @@ const optimistic = ({ getState, dispatch }) => (next) => async (action) => {
     dispatch({ type: SET_COMMENT, payload: [newComment, ...threadDetail.comments] });
 
     try {
-      const { data } = await instance.post(`/threads/${threadId}/comments`, { content });
+      const controller = abortManager.create('create-comments');
+      const { data } = await instance.post(`/threads/${threadId}/comments`, { content }, { signal: controller.signal });
       dispatch({
         type: SET_COMMENT,
         payload: [data.data.comment, ...threadDetail.comments]
@@ -88,7 +90,8 @@ const optimistic = ({ getState, dispatch }) => (next) => async (action) => {
     }
 
     try {
-      await instance.post(voteApi);
+      const controller = abortManager.create('vote-all');
+      await instance.post(voteApi, {}, { signal: controller.signal });
       return true;
     } catch (error) {
       dispatch({ type: setType, payload: originalState });

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { calculateDate } from '../../utils/date';
-import { clearThreads, threadsService } from '../../redux/action';
+import { clearThreads, threadsService, userService } from '../../redux/action';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as Add } from '../../icons/add.svg';
 import { ReactComponent as Like } from '../../icons/like.svg';
@@ -11,6 +11,7 @@ import { ReactComponent as DisLikeSolid } from '../../icons/disLikeSolid.svg';
 import { ReactComponent as ArrowLeft } from '../../icons/arrowLeft.svg';
 import { VOTE_THREAD_OPTIMISTIC } from '../../redux/types';
 import { alertLoginForVote } from '../../utils/alert';
+import { abortManager } from '../../api/abortManager';
 
 function Threads() {
   const dispatch = useDispatch();
@@ -41,14 +42,15 @@ function Threads() {
   };
 
   useEffect(()=>{
-    const controller = new AbortController();
-
     dispatch(threadsService.fetch());
+
+    if (isLogin) dispatch(userService.getMyProfile());
+
     return ()=> {
       dispatch(clearThreads());
-      controller.abort();
+      abortManager.abortAll();
     };
-  }, [dispatch]);
+  }, [dispatch, isLogin]);
 
   return (
     <section className='home-page'>
